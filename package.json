@@ -1,7 +1,7 @@
 {
-  "name": "re-order-animate",
+  "name": "ordered-animated-list",
+  "homepage": ".",
   "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
   "dependencies": {
     "bootstrap": "^5.0.1",
