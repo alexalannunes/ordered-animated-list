@@ -99,8 +99,8 @@
           const newList = this.list.sort((a, b) => +a.value - +b.value);
 
           // finding element with correct order to translateY element
-          newList.forEach((item, index) => {
-            const position = this.list.findIndex((i) => i.id == item.id);
+          this.list.forEach((item, index) => {
+            const position = newList.findIndex((i) => i.id == item.id);
             const elem = document.querySelector(`#item-${item.id}`);
             // elem.style.zIndex = index;
             elem.style.transform = `translateY(${position * Alex.listSize}px)`;
