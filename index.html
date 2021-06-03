@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Re-Order list animated</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+      .list-group {
+        position: relative;
+        width: 100%;
+        height: 400px;
+      }
+      .list-group-item {
+        position: absolute;
+        width: 100%;
+        height: 48px;
+        transition: all 0.8s cubic-bezier(0.69, 0.08, 0.21, 0.99);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 0 !important;
+      }
+      .item-info {
+        display: flex;
+        align-items: center;
+      }
+      .img {
+        margin-right: 10px;
+        height: 30px;
+        width: 30px;
+        border-radius: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Re-Order list animated</h1>
+      <br />
+      <div class="row">
+        <div class="col-md-8">
+          <ul class="list-group"></ul>
+        </div>
+        <div class="col">
+          <button class="btn btn-success">Order</button>
+
+          <button class="btn btn-info">Generate</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="./node_modules//guid/guid.js"></script>
+    <script>
+      class Alex {
+        static listSize = 48;
+        /**
+         * @param {HTMLElement} elem
+         */
+        constructor(elem) {
+          this.list = [];
+          this.elem = document.querySelector(elem);
+        }
+
+        generateList() {
+          for (var i = 0; i < 10; i++) {
+            this.list.push({
+              id: Guid.raw(),
+              value: (Math.random() * 1000) | 0,
+            });
+          }
+        }
+
+        renderList() {
+          const html = this.list
+            .map(({ id, value }, x) => {
+              const transform = `translateY(${x * Alex.listSize}px)`;
+              return `
+                <li class="list-group-item" id="item-${id}" style="transform: ${transform}">
+                  <div class="item-info" data-info="${value}">
+                    <img class="img" src="https://github.com/alexalannunes.png" />
+                    <strong>Alex Alan Nunes</strong>
+                  </div>
+                  <span style="color: gray">#${value}</span>
+                </li>
+              `;
+            })
+            .join("");
+          this.elem.innerHTML = html;
+        }
+
+        reOrderList() {
+          // ascending
+          const newList = this.list.sort((a, b) => +a.value - +b.value);
+
+          // finding element with correct order to translateY element
+          newList.forEach((item, index) => {
+            const position = this.list.findIndex((i) => i.id == item.id);
+            const elem = document.querySelector(`#item-${item.id}`);
+            // elem.style.zIndex = index;
+            elem.style.transform = `translateY(${position * Alex.listSize}px)`;
+          });
+        }
+
+        clearList() {
+          this.list = [];
+          // this.elem.innerHTML = "";
+        }
+      }
+      const btnGenerate = document.querySelector(".btn-info");
+      const btnreOrder = document.querySelector(".btn-success");
+
+      const alex = new Alex(".list-group");
+      alex.generateList();
+      alex.renderList();
+
+      btnGenerate.addEventListener("click", (e) => {
+        alex.clearList();
+        alex.generateList();
+        alex.renderList();
+      });
+
+      btnreOrder.addEventListener("click", (e) => {
+        alex.reOrderList();
+      });
+
+      console.log(alex);
+    </script>
+  </body>
+</html>
